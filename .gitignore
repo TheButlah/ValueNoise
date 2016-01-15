@@ -1,0 +1,9 @@
+#Project:
+build/
+
+#IntelliJ IDEA:
+.idea/
+*.iml
+
+#Gradle:
+.gradle
