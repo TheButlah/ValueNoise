@@ -19,7 +19,7 @@ public class JunitTest{
 
     @Test
     public void test() {
-        ValueNoise noise = new ValueNoise(1,null,10_00);
+        ValueNoise noise = new ValueNoise(5,null,10_00);
         BufferedImage img = new BufferedImage(10_00,10_00, BufferedImage.TYPE_BYTE_GRAY);
         for (int y=0;y<img.getHeight();y++) {
             for (int x=0;x<img.getWidth();x++) {

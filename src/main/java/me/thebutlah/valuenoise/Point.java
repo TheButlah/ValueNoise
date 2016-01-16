@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Created by ryan on 1/15/16.
  */
 public class Point {
-    public int[] pos;
+    public final int[] pos;
     public Point (int... values) {
         this.pos = values;
     }
