@@ -3,6 +3,7 @@ version '0.0.1'
 
 apply plugin: 'java'
 
+
 repositories {
     mavenCentral()
 }
@@ -10,4 +11,15 @@ repositories {
 dependencies {
     compile 'net.openhft:zero-allocation-hashing:0.5'
     testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+jar {
+    from {
+        (configurations.runtime).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes("Main-Class": "me.thebutlah.valuenoise.Main" )
+    }
 }

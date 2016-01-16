@@ -11,7 +11,7 @@ public class ValueNoise {
     private final LongHashFunction hashFunction;
     private final HashMap<Point, Double> randomValues;
 
-    public ValueNoise(int recursions, double persistence, Long seed, int numPoints) {
+    public ValueNoise(int recursions, double persistence, Long seed, int pointsPerSide) {
         this.recursions = recursions;
         this.persistence = persistence;
         if (seed == null) {
@@ -20,7 +20,7 @@ public class ValueNoise {
             this.seed = seed;
         }
         //Before any recursions, there will be numPoints unique integer inputs. There will be 2^(recursions*2) inputs per unique integer input.
-        int size = (int)(numPoints * Math.pow(2, 2*recursions));
+        int size = (int)(Math.pow(2, pointsPerSide + 1) * Math.pow(2, 2*(recursions-1)));
         randomValues = new HashMap<>(size);
         hashFunction = LongHashFunction.xx_r39(this.seed);
     }

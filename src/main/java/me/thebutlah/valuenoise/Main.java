@@ -1,24 +1,16 @@
-import org.junit.Test;
-import me.thebutlah.valuenoise.ValueNoise;
+package me.thebutlah.valuenoise;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
 import java.awt.*;
-import java.awt.color.ColorSpace;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
 
 /**
- * Created by ryan on 1/15/16.
+ * Created by ryan on 1/16/16.
  */
-public class JunitTest{
-
-    @Test
-    public void test() {
+public class Main {
+    public static void main(String[] args) {
         ValueNoise noise = new ValueNoise(1,null,10_00);
         BufferedImage img = new BufferedImage(10_00,10_00, BufferedImage.TYPE_BYTE_GRAY);
         for (int y=0;y<img.getHeight();y++) {
