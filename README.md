@@ -6,7 +6,7 @@ Value noise is a type of noise function. A noise function can be thought of as a
 
     -It is a coherent noise function, meaning that its values flow continuously and can accept decimal inputs
     -It is fractal in nature, meaning that it has self-similar properties that repeat at any detail/zoom level
-    -It is highly customizeable, allowing the user to fine-tune the properties of the noise generator.
+    -It is highly customizeable, allowing the user to fine-tune the properties of the noise generator
 
 Value noise is well suited to generating heightmaps, textures, particle effects, terrain (both for 2D and 3D applications), volumetric clouds that change over time, and more.
 

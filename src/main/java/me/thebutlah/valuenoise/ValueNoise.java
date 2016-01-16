@@ -1,41 +1,67 @@
 package me.thebutlah.valuenoise;
 
-import java.util.Random;
+import net.openhft.hashing.LongHashFunction;
+import java.util.*;
 
 public class ValueNoise {
+
+    private final int recursions;
+    private final double persistence;
+    private final long seed;
+    private final LongHashFunction hashFunction;
+    private final HashMap<Point, Double> randomValues;
+
+    public ValueNoise(int recursions, double persistence, Long seed, int numPoints) {
+        this.recursions = recursions;
+        this.persistence = persistence;
+        if (seed == null) {
+            this.seed = (new Random()).nextLong();
+        } else {
+            this.seed = seed;
+        }
+        //Before any recursions, there will be numPoints unique integer inputs. There will be 2^(recursions*2) inputs per unique integer input.
+        int size = (int)(numPoints * Math.pow(2, 2*recursions));
+        randomValues = new HashMap<>(size);
+        hashFunction = LongHashFunction.xx_r39(this.seed);
+    }
+
+    public ValueNoise(int recursions, Long seed, int numPoints) {
+        this(recursions, 0.5, seed, numPoints);
+    }
+
     private static int intfunc; //these two vars are up here so that they can be used in methods down the line.
-    private static int function; //this var is to be used as a sort of counter to switch between different random functions every recursion
-    public static double generateValueNoise2D(double x, double y, int recursions, double persistence, int interpolationfunc, double seed) { //higher persistence = lower amplitude (I reccomend using around 1/2), more recursions = more detail
+
+
+
+    public double generateValueNoise2D(double x, double y, int interpolationfunc) { //higher persistence = lower amplitude (I reccomend using around 1/2), more recursions = more detail
         double finalvalue = 0;
         double range = 0;
         intfunc = interpolationfunc;
-        function = -1;
         for (int i=0; i<recursions; i++) {
-            function++;
             int frequency = (int) Math.pow(2, i);		//multiply the frequency of 2 every recursion
             double amplitude = Math.pow(persistence, i);//multiply the persistence by itself every recursion
             range += amplitude; //calculating max or min value the final output can be
-            finalvalue = finalvalue + interpolatedNoise((x + seed) * frequency, (y + seed) * frequency) * amplitude;
-            if (function >=1) function = 0;
+            finalvalue += interpolatedNoise(x * frequency, y * frequency) * amplitude;
         }
         return finalvalue/range; //divide by range to ensure output is between -1 and 1
     }
 
 
-    private static double randomNoise(int x, int y) { //generates the initial random points
-        if (function == 1) {
-            Random random = new Random(x + y*57);
-            random.nextDouble();
-            return random.nextDouble() * 2 - 1;
-        } else {
-            int n = x + y*57;
-            n = (n<<13) ^ n;
-            return (1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
-        }
+    private double randomNoise(int... values) { //generates the initial random points
+        Point point = new Point(values);
+        //tempSeed = Integer.hashCode(y) | (tempSeed<<40); //make the seed into the least significant digits of both x and y
+        return randomValues.computeIfAbsent(point, this::genRand);
+        //System.out.format("X: %d, Y: %d, Seed: %s\n", x, y, Long.toBinaryString(tempSeed));
+    }
+
+    private double genRand(Point point) {
+        double temp = hashFunction.hashInts(point.pos);
+        double result = temp/Long.MAX_VALUE;
+        return result;
     }
 
 
-    private static double interpolatedNoise(double x, double y) { //interpolates the points using a cosine interpolation
+    private double interpolatedNoise(double x, double y) { //interpolates the points using a cosine interpolation
         int x_int = (int) x;			//splitting x into its integer and decimal components
         double x_decimal = x - x_int;
 
